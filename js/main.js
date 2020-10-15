@@ -55,54 +55,59 @@ const IMG_LINKS = [
   `http://o0.github.io/assets/images/tokyo/hotel3.jpg`
 ];
 
-const map = document.querySelector(`.map`);
-map.classList.remove(`map--faded`);
-
-const mapPins = map.querySelector(`.map__pins`);
-
-const pinTemplate = document.querySelector(`#pin`).content.querySelector(`.map__pin`);
+const showMap = function () {
+  const map = document.querySelector(`.map`);
+  map.classList.remove(`map--faded`);
+}
 
 const getRandomInt = function (min, max) {
   return Math.floor(Math.random() * (max - min)) + min;
 };
 
 const getRandomEl = function (array) {
-  let rand = Math.floor(Math.random() * array.length);
+  const rand = Math.floor(Math.random() * array.length);
   return array[rand];
 };
 
+const getRandomArray = function (array, count) {
+  let arrayCount = getRandomInt(1, count);
+  let randomArray = [];
+  for (let i = 0; i < arrayCount; i++) {
+    randomArray[i] = getRandomEl(array);
+  }
+  return randomArray;
+};
+
 const makeRandomCard = function (count) {
-  let randomCard = {};
-  randomCard[`author`] = {};
-  randomCard[`author`][`avatar`] = `img/avatars/user0` + count + `.png`;
-  randomCard[`location`] = {};
-  randomCard[`location`][`x`] = getRandomInt(0, 1201);
-  randomCard[`location`][`y`] = getRandomInt(130, 631);
-  randomCard[`offer`] = {};
-  randomCard[`offer`][`title`] = getRandomEl(TITLES);
-  randomCard[`offer`][`address`] = `${randomCard[`location`][`x`]}, ${randomCard[`location`][`y`]}`;
-  randomCard[`offer`][`price`] = getRandomInt(2500, 25000);
-  randomCard[`offer`][`type`] = getRandomEl(APARTMENT_TYPE);
-  randomCard[`offer`][`rooms`] = getRandomInt(1, 16);
-  randomCard[`offer`][`guests`] = getRandomInt(1, 26);
-  randomCard[`offer`][`checkin`] = getRandomEl(TIME_CHOICE);
-  randomCard[`offer`][`checkout`] = getRandomEl(TIME_CHOICE);
-  randomCard[`offer`][`features`] = [];
-  let featuresCount = getRandomInt(1, 7);
-  for (let i = 0; i < featuresCount; i++) {
-    randomCard[`offer`][`features`][i] = getRandomEl(CONVENIENCE);
-  }
-  randomCard[`offer`][`description`] = getRandomEl(DESCRIPTIONS);
-  randomCard[`offer`][`photos`] = [];
-  let photosCount = getRandomInt(1, 11);
-  for (let i = 0; i < photosCount; i++) {
-    randomCard[`offer`][`photos`][i] = getRandomEl(IMG_LINKS);
-  }
+  const randomCard = {
+    author: {
+      avatar: `img/avatars/user0` + count + `.png`
+    },
+    location: {
+      x: getRandomInt(0, 1201),
+      y: getRandomInt(130, 631),
+    },
+    offer: {
+      title: getRandomEl(TITLES),
+      price: getRandomInt(2500, 25000),
+      type: getRandomEl(APARTMENT_TYPE),
+      rooms: getRandomInt(1, 16),
+      guests: getRandomInt(1, 26),
+      checkin: getRandomEl(TIME_CHOICE),
+      checkout: getRandomEl(TIME_CHOICE),
+      description: getRandomEl(DESCRIPTIONS),
+      features: getRandomArray(CONVENIENCE, 7),
+      photos: getRandomArray(IMG_LINKS, 11),
+    },
+  };
+  randomCard.offer.address = `${randomCard.location.x}, ${randomCard.location.y}`;
+
+  console.log(randomCard);
   return randomCard;
 };
 
 const makeCardsList = function (count) {
-  let list = [];
+  const list = [];
   for (let i = 0; i < count; i++) {
     list[i] = makeRandomCard(i + 1);
   }
@@ -110,13 +115,15 @@ const makeCardsList = function (count) {
 };
 
 const renderPin = function (data) {
+
+  const pinTemplate = document.querySelector(`#pin`).content.querySelector(`.map__pin`);
   let pinElement = pinTemplate.cloneNode(true);
 
-  let pinX = data[`location`][`x`] - 25;
-  let pinY = data[`location`][`y`] - 70;
+  let pinX = data.location.x - 25;
+  let pinY = data.location.y - 70;
 
-  pinElement.querySelector(`img`).src = data[`author`][`avatar`];
-  pinElement.querySelector(`img`).alt = data[`offer`][`title`];
+  pinElement.querySelector(`img`).src = data.author.avatar;
+  pinElement.querySelector(`img`).alt = data.offer.title;
   pinElement.style = `left: ${pinX}px; top: ${pinY}px;`;
 
   return pinElement;
@@ -130,6 +137,11 @@ const makePinsList = function (array) {
   return fragment;
 };
 
-let cardsList = makeCardsList(8);
+const renderPins = function () {
+  const cardsList = makeCardsList(8);
+  const mapPins = document.querySelector(`.map__pins`);
+  mapPins.appendChild(makePinsList(cardsList));
+}
 
-mapPins.appendChild(makePinsList(cardsList));
+showMap();
+renderPins();

@@ -58,7 +58,7 @@ const IMG_LINKS = [
 const showMap = function () {
   const map = document.querySelector(`.map`);
   map.classList.remove(`map--faded`);
-}
+};
 
 const getRandomInt = function (min, max) {
   return Math.floor(Math.random() * (max - min)) + min;
@@ -102,7 +102,6 @@ const makeRandomCard = function (count) {
   };
   randomCard.offer.address = `${randomCard.location.x}, ${randomCard.location.y}`;
 
-  console.log(randomCard);
   return randomCard;
 };
 
@@ -141,7 +140,7 @@ const renderPins = function () {
   const cardsList = makeCardsList(8);
   const mapPins = document.querySelector(`.map__pins`);
   mapPins.appendChild(makePinsList(cardsList));
-}
+};
 
 showMap();
 renderPins();

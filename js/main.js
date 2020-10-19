@@ -1,11 +1,11 @@
 'use strict';
 
-const APARTMENT_TYPE = [
-  `palace`,
-  `flat`,
-  `house`,
-  `bungalow`
-];
+const APARTMENT_TYPE = {
+  palace: `Дворец`,
+  flat: `Квартира`,
+  house: `Дом`,
+  bungalow: `Бунгало`,
+};
 
 const TIME_CHOICE = [
   `12:00`,
@@ -90,7 +90,7 @@ const makeRandomCard = function (count) {
     offer: {
       title: getRandomEl(TITLES),
       price: getRandomInt(2500, 25000),
-      type: getRandomEl(APARTMENT_TYPE),
+      type: getRandomEl(Object.keys(APARTMENT_TYPE)),
       rooms: getRandomInt(1, 16),
       guests: getRandomInt(1, 26),
       checkin: getRandomEl(TIME_CHOICE),
@@ -140,7 +140,50 @@ const renderPins = function () {
   const cardsList = makeCardsList(8);
   const mapPins = document.querySelector(`.map__pins`);
   mapPins.appendChild(makePinsList(cardsList));
+
+  const newCard = fillCard(cardsList[0])
+  const map = document.querySelector(`.map`);
+  const referenceElement = map.querySelector(`.map__filters-container`);
+  map.insertBefore(newCard, referenceElement);
 };
+
+const fillCard = function (object) {
+  const cardTemplate = document.querySelector(`#card`).content.querySelector(`.map__card`);
+  let cardElement = cardTemplate.cloneNode(true);
+
+  cardElement.querySelector(`.popup__avatar`).src = object.author.avatar;
+  // cardElement.querySelector(`popup__avatar`).alt = object.offer.title;
+  cardElement.querySelector(`.popup__title`).textContent = object.offer.title;
+  cardElement.querySelector(`.popup__text--address`).textContent = object.offer.address;
+  cardElement.querySelector(`.popup__text--price`).innerHTML = `${object.offer.price}&#x20bd;<span>/ночь</span>`;
+  cardElement.querySelector(`.popup__type`).textContent = APARTMENT_TYPE[object.offer.type];
+  cardElement.querySelector(`.popup__text--capacity`).textContent = `${object.offer.rooms} комнаты для ${object.offer.guests} гостей`;
+  cardElement.querySelector(`.popup__text--time`).textContent = `Заезд после ${object.offer.checkin}, выезд до ${object.offer.checkout}`;
+  cardElement.querySelector(`.popup__description`).textContent = object.offer.description;
+
+  for (let i = 0; i < CONVENIENCE.length; i++) {
+    if (!object.offer.features.includes(CONVENIENCE[i])) {
+      cardElement.querySelector(`.popup__feature--${CONVENIENCE[i]}`).classList.add(`visually-hidden`);
+    }
+  }
+
+  const photosList = cardElement.querySelector(`.popup__photos`);
+  const templateImg = photosList.querySelector(`.popup__photo`);
+  photosList.removeChild(templateImg);
+  for (let i = 0; i < object.offer.photos.length; i++) {
+    let newImage = document.createElement(`img`);
+    newImage.src = object.offer.photos[i];
+    newImage.classList.add(`popup__photo`);
+    newImage.width = `45`;
+    newImage.height = `40`;
+    newImage.alt = `Фотография жилья`;
+    photosList.appendChild(newImage);
+  }
+
+  return cardElement;
+}
 
 showMap();
 renderPins();
+
+

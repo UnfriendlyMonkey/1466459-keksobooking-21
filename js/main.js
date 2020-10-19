@@ -141,7 +141,7 @@ const renderPins = function () {
   const mapPins = document.querySelector(`.map__pins`);
   mapPins.appendChild(makePinsList(cardsList));
 
-  const newCard = fillCard(cardsList[0])
+  const newCard = fillCard(cardsList[0]);
   const map = document.querySelector(`.map`);
   const referenceElement = map.querySelector(`.map__filters-container`);
   map.insertBefore(newCard, referenceElement);
@@ -181,7 +181,7 @@ const fillCard = function (object) {
   }
 
   return cardElement;
-}
+};
 
 showMap();
 renderPins();

@@ -164,10 +164,7 @@ const hideElement = function (element) {
 
 const checkData = function (data, element, property = `textContent`, text) {
   text = typeof text !== `undefined` ? text : data;
-  // let text = ``;
-  // if (content) {
-  //   text = content;
-  // } else text = data;
+
   if (findData(data) === true) {
     addData(text, element, property);
   } else {

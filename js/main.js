@@ -184,7 +184,6 @@ const renderPins = function () {
   mapPins.appendChild(makePinsList(cardsList));
 
   const newCard = fillCard(cardsList[0]);
-  const map = document.querySelector(`.map`);
   const referenceElement = map.querySelector(`.map__filters-container`);
   map.insertBefore(newCard, referenceElement);
 };
@@ -302,20 +301,22 @@ deactivateMap();
 pinMain.addEventListener(`mousedown`, (evt) => {
   if (evt.button === 0) {
     showMap();
+    renderPins();
   }
 });
 
 pinMain.addEventListener(`keydown`, (evt) => {
   if (evt.key === `Enter`) {
     showMap();
+    renderPins();
   }
 });
 
 const compareGuestsToRooms = () => {
-  if (roomInput.value === `100` && guestInput.value != `0`) {
+  if (roomInput.value === `100` && guestInput.value !== `0`) {
     guestInput.setCustomValidity(`Этот вариант не для гостей`);
     guestInput.style.background = `red`;
-  } else if (roomInput.value != `100` && guestInput.value > roomInput.value) {
+  } else if (roomInput.value !== `100` && guestInput.value > roomInput.value) {
     guestInput.setCustomValidity(`Количество гостей не должно превышать количество комнат`);
     guestInput.style.background = `red`;
   } else {

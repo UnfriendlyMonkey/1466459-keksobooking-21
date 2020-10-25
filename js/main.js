@@ -55,9 +55,51 @@ const IMG_LINKS = [
   `http://o0.github.io/assets/images/tokyo/hotel3.jpg`
 ];
 
-const showMap = function () {
-  const map = document.querySelector(`.map`);
+// const MAIN_PIN_SIZE = {
+//   width: 62,
+//   height: 84
+// };
+
+const map = document.querySelector(`.map`);
+const form = document.querySelector(`.ad-form`);
+const formFieldsets = form.querySelectorAll(`fieldset`);
+const address = form.querySelector(`#address`);
+const pinMain = map.querySelector(`.map__pin--main`);
+const roomInput = form.querySelector(`#room_number`);
+const guestInput = form.querySelector(`#capacity`);
+
+const toggleFormFieldsDisabled = () => {
+  for (let i = 0; i < formFieldsets.length; i++) {
+    if (formFieldsets[i].hasAttribute(`disabled`)) {
+      formFieldsets[i].removeAttribute(`disabled`);
+    } else {
+      formFieldsets[i].setAttribute(`disabled`, `disabled`);
+    }
+  }
+};
+
+const setAddress = () => {
+  if (map.classList.contains(`map--faded`)) {
+    address.value = `601, 450`;
+  } else {
+    address.value = `601, 459`;
+  }
+};
+
+const showMap = () => {
+  // const map = document.querySelector(`.map`);
   map.classList.remove(`map--faded`);
+  setAddress();
+  form.classList.remove(`ad-form--disabled`);
+  toggleFormFieldsDisabled();
+  compareGuestsToRooms();
+};
+
+const deactivateMap = () => {
+  map.classList.add(`map--faded`);
+  setAddress();
+  form.classList.add(`ad-form--disabled`);
+  toggleFormFieldsDisabled();
 };
 
 const getRandomInt = function (min, max) {
@@ -252,5 +294,40 @@ const fillCard = function (object) {
   return cardElement;
 };
 
-showMap();
-renderPins();
+// showMap();
+// renderPins();
+
+deactivateMap();
+
+pinMain.addEventListener(`mousedown`, (evt) => {
+  if (evt.button === 0) {
+    showMap();
+  }
+});
+
+pinMain.addEventListener(`keydown`, (evt) => {
+  if (evt.key === `Enter`) {
+    showMap();
+  }
+});
+
+const compareGuestsToRooms = () => {
+  if (roomInput.value === `100` && guestInput.value != `0`) {
+    guestInput.setCustomValidity(`Этот вариант не для гостей`);
+    guestInput.style.background = `red`;
+  } else if (roomInput.value != `100` && guestInput.value > roomInput.value) {
+    guestInput.setCustomValidity(`Количество гостей не должно превышать количество комнат`);
+    guestInput.style.background = `red`;
+  } else {
+    guestInput.setCustomValidity(``);
+    guestInput.removeAttribute(`style`);
+  }
+};
+
+guestInput.addEventListener(`change`, () => {
+  compareGuestsToRooms();
+});
+
+roomInput.addEventListener(`change`, () => {
+  compareGuestsToRooms();
+});

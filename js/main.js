@@ -55,11 +55,6 @@ const IMG_LINKS = [
   `http://o0.github.io/assets/images/tokyo/hotel3.jpg`
 ];
 
-// const MAIN_PIN_SIZE = {
-//   width: 62,
-//   height: 84
-// };
-
 const map = document.querySelector(`.map`);
 const form = document.querySelector(`.ad-form`);
 const formFieldsets = form.querySelectorAll(`fieldset`);
@@ -68,14 +63,27 @@ const pinMain = map.querySelector(`.map__pin--main`);
 const roomInput = form.querySelector(`#room_number`);
 const guestInput = form.querySelector(`#capacity`);
 
-const toggleFormFieldsDisabled = () => {
+const enableFields = () => {
   for (let i = 0; i < formFieldsets.length; i++) {
-    if (formFieldsets[i].hasAttribute(`disabled`)) {
-      formFieldsets[i].removeAttribute(`disabled`);
-    } else {
-      formFieldsets[i].setAttribute(`disabled`, `disabled`);
-    }
+    formFieldsets[i].removeAttribute(`disabled`);
   }
+};
+
+const disableFields = () => {
+  for (let i = 0; i < formFieldsets.length; i++) {
+    formFieldsets[i].setAttribute(`disabled`, `disabled`);
+  }
+};
+
+const activateForm = () => {
+  form.classList.remove(`ad-form--disabled`);
+  enableFields();
+  compareGuestsToRooms();
+};
+
+const deactivateForm = () => {
+  form.classList.add(`ad-form--disabled`);
+  disableFields();
 };
 
 const setAddress = () => {
@@ -86,20 +94,29 @@ const setAddress = () => {
   }
 };
 
-const showMap = () => {
-  // const map = document.querySelector(`.map`);
+const activateMap = () => {
   map.classList.remove(`map--faded`);
   setAddress();
-  form.classList.remove(`ad-form--disabled`);
-  toggleFormFieldsDisabled();
-  compareGuestsToRooms();
+  activateForm();
 };
 
 const deactivateMap = () => {
   map.classList.add(`map--faded`);
   setAddress();
-  form.classList.add(`ad-form--disabled`);
-  toggleFormFieldsDisabled();
+  deactivateForm();
+};
+
+const activatePage = () => {
+  activateMap();
+  activateForm();
+  if (!map.querySelector(`.map__card`)) {
+    renderPins();
+  }
+};
+
+const deactivatePage = () => {
+  deactivateMap();
+  deactivateForm();
 };
 
 const getRandomInt = function (min, max) {
@@ -293,22 +310,17 @@ const fillCard = function (object) {
   return cardElement;
 };
 
-// showMap();
-// renderPins();
-
-deactivateMap();
+deactivatePage();
 
 pinMain.addEventListener(`mousedown`, (evt) => {
   if (evt.button === 0) {
-    showMap();
-    renderPins();
+    activatePage();
   }
 });
 
 pinMain.addEventListener(`keydown`, (evt) => {
   if (evt.key === `Enter`) {
-    showMap();
-    renderPins();
+    activatePage();
   }
 });
 

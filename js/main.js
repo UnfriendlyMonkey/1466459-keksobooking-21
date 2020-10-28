@@ -195,14 +195,27 @@ const makePinsList = function (array) {
   return fragment;
 };
 
+const onEscHideCard = (evt) => {
+  if (map.querySelector(`.map__card`) && evt.key === `Escape`) {
+    let cardToHide = map.querySelector(`.map__card`);
+    cardToHide.removeEventListener(`keydown`, onEscHideCard);
+    map.removeChild(cardToHide);
+  }
+}
+
+const newCard = (data) => {
+  let cardToShow = fillCard(data);
+  const referenceElement = map.querySelector(`.map__filters-container`);
+  map.insertBefore(cardToShow, referenceElement);
+  document.addEventListener(`keydown`, onEscHideCard);
+}
+
 const renderPins = function () {
   const cardsList = makeCardsList(8);
   const mapPins = document.querySelector(`.map__pins`);
   mapPins.appendChild(makePinsList(cardsList));
 
-  const newCard = fillCard(cardsList[0]);
-  const referenceElement = map.querySelector(`.map__filters-container`);
-  map.insertBefore(newCard, referenceElement);
+  newCard(cardsList[0]);
 };
 
 const findData = function (data) {

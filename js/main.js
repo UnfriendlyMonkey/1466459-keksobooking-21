@@ -55,9 +55,68 @@ const IMG_LINKS = [
   `http://o0.github.io/assets/images/tokyo/hotel3.jpg`
 ];
 
-const showMap = function () {
-  const map = document.querySelector(`.map`);
+const map = document.querySelector(`.map`);
+const form = document.querySelector(`.ad-form`);
+const formFieldsets = form.querySelectorAll(`fieldset`);
+const address = form.querySelector(`#address`);
+const pinMain = map.querySelector(`.map__pin--main`);
+const roomInput = form.querySelector(`#room_number`);
+const guestInput = form.querySelector(`#capacity`);
+
+const enableFields = () => {
+  for (let i = 0; i < formFieldsets.length; i++) {
+    formFieldsets[i].removeAttribute(`disabled`);
+  }
+};
+
+const disableFields = () => {
+  for (let i = 0; i < formFieldsets.length; i++) {
+    formFieldsets[i].setAttribute(`disabled`, `disabled`);
+  }
+};
+
+const activateForm = () => {
+  form.classList.remove(`ad-form--disabled`);
+  enableFields();
+  compareGuestsToRooms();
+};
+
+const deactivateForm = () => {
+  form.classList.add(`ad-form--disabled`);
+  disableFields();
+};
+
+const setAddress = () => {
+  if (map.classList.contains(`map--faded`)) {
+    address.value = `601, 450`;
+  } else {
+    address.value = `601, 459`;
+  }
+};
+
+const activateMap = () => {
   map.classList.remove(`map--faded`);
+  setAddress();
+  activateForm();
+};
+
+const deactivateMap = () => {
+  map.classList.add(`map--faded`);
+  setAddress();
+  deactivateForm();
+};
+
+const activatePage = () => {
+  activateMap();
+  activateForm();
+  if (!map.querySelector(`.map__card`)) {
+    renderPins();
+  }
+};
+
+const deactivatePage = () => {
+  deactivateMap();
+  deactivateForm();
 };
 
 const getRandomInt = function (min, max) {
@@ -142,7 +201,6 @@ const renderPins = function () {
   mapPins.appendChild(makePinsList(cardsList));
 
   const newCard = fillCard(cardsList[0]);
-  const map = document.querySelector(`.map`);
   const referenceElement = map.querySelector(`.map__filters-container`);
   map.insertBefore(newCard, referenceElement);
 };
@@ -252,5 +310,37 @@ const fillCard = function (object) {
   return cardElement;
 };
 
-showMap();
-renderPins();
+deactivatePage();
+
+pinMain.addEventListener(`mousedown`, (evt) => {
+  if (evt.button === 0) {
+    activatePage();
+  }
+});
+
+pinMain.addEventListener(`keydown`, (evt) => {
+  if (evt.key === `Enter`) {
+    activatePage();
+  }
+});
+
+const compareGuestsToRooms = () => {
+  if (roomInput.value === `100` && guestInput.value !== `0`) {
+    guestInput.setCustomValidity(`Этот вариант не для гостей`);
+    guestInput.style.background = `red`;
+  } else if (roomInput.value !== `100` && guestInput.value > roomInput.value) {
+    guestInput.setCustomValidity(`Количество гостей не должно превышать количество комнат`);
+    guestInput.style.background = `red`;
+  } else {
+    guestInput.setCustomValidity(``);
+    guestInput.removeAttribute(`style`);
+  }
+};
+
+guestInput.addEventListener(`change`, () => {
+  compareGuestsToRooms();
+});
+
+roomInput.addEventListener(`change`, () => {
+  compareGuestsToRooms();
+});

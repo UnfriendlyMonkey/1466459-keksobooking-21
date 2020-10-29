@@ -100,13 +100,13 @@ const setAddress = () => {
 const activateMap = () => {
   map.classList.remove(`map--faded`);
   setAddress();
-  activateForm();
+  // activateForm();
 };
 
 const deactivateMap = () => {
   map.classList.add(`map--faded`);
   setAddress();
-  deactivateForm();
+  // deactivateForm();
 };
 
 const activatePage = () => {
@@ -115,6 +115,7 @@ const activatePage = () => {
   if (!map.querySelector(`.map__card`)) {
     renderPins();
   }
+  newCard(cardsList[0]);
 };
 
 const deactivatePage = () => {
@@ -234,9 +235,6 @@ const findCardToShow = (evt) => {
 const renderPins = function () {
   const mapPins = document.querySelector(`.map__pins`);
   mapPins.appendChild(makePinsList(cardsList));
-
-  newCard(cardsList[0]);
-
   map.addEventListener(`click`, findCardToShow);
 };
 
@@ -348,7 +346,7 @@ const fillCard = function (object) {
 deactivatePage();
 
 pinMain.addEventListener(`mousedown`, (evt) => {
-  if (evt.button === 0) {
+  if (evt.button === 0 && map.classList.contains(`map--faded`)) {
     activatePage();
   }
 });

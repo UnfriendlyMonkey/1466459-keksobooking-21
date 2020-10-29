@@ -204,7 +204,7 @@ const makePinsList = function (array) {
 const onEscHideCard = (evt) => {
   if (map.querySelector(`.map__card`) && evt.key === `Escape`) {
     let cardToHide = map.querySelector(`.map__card`);
-    cardToHide.removeEventListener(`keydown`, onEscHideCard);
+    document.removeEventListener(`keydown`, onEscHideCard);
     map.removeChild(cardToHide);
   }
 };
@@ -212,11 +212,16 @@ const onEscHideCard = (evt) => {
 const newCard = (data) => {
   if (map.querySelector(`.map__card`)) {
     let cardToHide = map.querySelector(`.map__card`);
-    cardToHide.removeEventListener(`keydown`, onEscHideCard);
+    document.removeEventListener(`keydown`, onEscHideCard);
     map.removeChild(cardToHide);
   }
   let cardToShow = fillCard(data);
   const referenceElement = map.querySelector(`.map__filters-container`);
+  let cardCloseButton = cardToShow.querySelector(`.popup__close`);
+  cardCloseButton.addEventListener(`click`, function () {
+    document.removeEventListener(`keydown`, onEscHideCard);
+    map.removeChild(cardToShow);
+  });
   map.insertBefore(cardToShow, referenceElement);
   document.addEventListener(`keydown`, onEscHideCard);
 };

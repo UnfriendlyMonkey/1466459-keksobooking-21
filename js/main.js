@@ -90,6 +90,7 @@ const activateForm = () => {
   form.classList.remove(`ad-form--disabled`);
   enableFields();
   compareGuestsToRooms();
+  addFormValidation();
 };
 
 const deactivateForm = () => {
@@ -406,6 +407,36 @@ const checkTitleLength = (titleLength) => {
   titleInput.reportValidity();
 };
 
+const addFormValidation = () => {
+  guestInput.addEventListener(`change`, () => {
+    compareGuestsToRooms();
+  });
+
+  roomInput.addEventListener(`change`, () => {
+    compareGuestsToRooms();
+  });
+
+  typeInput.addEventListener(`change`, () => {
+    compareTypeToPrice();
+  });
+
+  priceInput.addEventListener(`change`, () => {
+    compareTypeToPrice();
+  });
+
+  titleInput.addEventListener(`input`, () => {
+    checkTitleLength(titleInput.value.length);
+  });
+
+  timeinInput.addEventListener(`change`, () => {
+    timeoutInput.value = timeinInput.value;
+  });
+
+  timeoutInput.addEventListener(`change`, () => {
+    timeinInput.value = timeoutInput.value;
+  });
+};
+
 deactivatePage();
 
 pinMain.addEventListener(`mousedown`, (evt) => {
@@ -418,32 +449,4 @@ pinMain.addEventListener(`keydown`, (evt) => {
   if (evt.key === `Enter`) {
     activatePage();
   }
-});
-
-guestInput.addEventListener(`change`, () => {
-  compareGuestsToRooms();
-});
-
-roomInput.addEventListener(`change`, () => {
-  compareGuestsToRooms();
-});
-
-typeInput.addEventListener(`change`, () => {
-  compareTypeToPrice();
-});
-
-priceInput.addEventListener(`change`, () => {
-  compareTypeToPrice();
-});
-
-titleInput.addEventListener(`input`, () => {
-  checkTitleLength(titleInput.value.length);
-});
-
-timeinInput.addEventListener(`change`, () => {
-  timeoutInput.value = timeinInput.value;
-});
-
-timeoutInput.addEventListener(`change`, () => {
-  timeinInput.value = timeoutInput.value;
 });

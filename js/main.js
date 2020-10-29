@@ -55,6 +55,9 @@ const IMG_LINKS = [
   `http://o0.github.io/assets/images/tokyo/hotel3.jpg`
 ];
 
+const PIN_X_SHIFT = 25;
+const PIN_Y_SHIFT = 70;
+
 const map = document.querySelector(`.map`);
 const form = document.querySelector(`.ad-form`);
 const formFieldsets = form.querySelectorAll(`fieldset`);
@@ -172,13 +175,15 @@ const makeCardsList = function (count) {
   return list;
 };
 
+const cardsList = makeCardsList(8);
+
 const renderPin = function (data) {
 
   const pinTemplate = document.querySelector(`#pin`).content.querySelector(`.map__pin`);
   let pinElement = pinTemplate.cloneNode(true);
 
-  let pinX = data.location.x - 25;
-  let pinY = data.location.y - 70;
+  let pinX = data.location.x - PIN_X_SHIFT;
+  let pinY = data.location.y - PIN_Y_SHIFT;
 
   pinElement.querySelector(`img`).src = data.author.avatar;
   pinElement.querySelector(`img`).alt = data.offer.title;
@@ -201,21 +206,38 @@ const onEscHideCard = (evt) => {
     cardToHide.removeEventListener(`keydown`, onEscHideCard);
     map.removeChild(cardToHide);
   }
-}
+};
 
 const newCard = (data) => {
+  if (map.querySelector(`.map__card`)) {
+    let cardToHide = map.querySelector(`.map__card`);
+    cardToHide.removeEventListener(`keydown`, onEscHideCard);
+    map.removeChild(cardToHide);
+  }
   let cardToShow = fillCard(data);
   const referenceElement = map.querySelector(`.map__filters-container`);
   map.insertBefore(cardToShow, referenceElement);
   document.addEventListener(`keydown`, onEscHideCard);
-}
+};
+
+const findCardToShow = (evt) => {
+  if (!evt.target.closest(`.map__pin`) || evt.target.closest(`.map__pin`).classList.contains(`map__pin--main`)) {
+    return;
+  }
+  let activePin = evt.target.closest(`.map__pin`);
+  let dataToShow = cardsList.filter(function (item) {
+    return item.offer.title === activePin.querySelector(`img`).alt && activePin.style.left === `${item.location.x - PIN_X_SHIFT}px` && activePin.style.top === `${item.location.y - PIN_Y_SHIFT}px`;
+  });
+  newCard(dataToShow[0]);
+};
 
 const renderPins = function () {
-  const cardsList = makeCardsList(8);
   const mapPins = document.querySelector(`.map__pins`);
   mapPins.appendChild(makePinsList(cardsList));
 
   newCard(cardsList[0]);
+
+  map.addEventListener(`click`, findCardToShow);
 };
 
 const findData = function (data) {

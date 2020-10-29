@@ -71,6 +71,8 @@ const guestInput = form.querySelector(`#capacity`);
 const typeInput = form.querySelector(`#type`);
 const priceInput = form.querySelector(`#price`);
 const titleInput = form.querySelector(`#title`);
+const timeinInput = form.querySelector(`#timein`);
+const timeoutInput = form.querySelector(`#timeout`);
 
 const enableFields = () => {
   for (let i = 0; i < formFieldsets.length; i++) {
@@ -402,7 +404,7 @@ const checkTitleLength = (titleLength) => {
     titleInput.removeAttribute(`style`);
   }
   titleInput.reportValidity();
-}
+};
 
 deactivatePage();
 
@@ -436,5 +438,12 @@ priceInput.addEventListener(`change`, () => {
 
 titleInput.addEventListener(`input`, () => {
   checkTitleLength(titleInput.value.length);
-  titleInput.reportValidity();
-})
+});
+
+timeinInput.addEventListener(`change`, () => {
+  timeoutInput.value = timeinInput.value;
+});
+
+timeoutInput.addEventListener(`change`, () => {
+  timeinInput.value = timeoutInput.value;
+});

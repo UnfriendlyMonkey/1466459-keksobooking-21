@@ -58,6 +58,9 @@ const IMG_LINKS = [
 const PIN_X_SHIFT = 25;
 const PIN_Y_SHIFT = 70;
 
+const MIN_TITLE_LENGTH = 30;
+const MAX_TITLE_LENGTH = 100;
+
 const map = document.querySelector(`.map`);
 const form = document.querySelector(`.ad-form`);
 const formFieldsets = form.querySelectorAll(`fieldset`);
@@ -67,6 +70,7 @@ const roomInput = form.querySelector(`#room_number`);
 const guestInput = form.querySelector(`#capacity`);
 const typeInput = form.querySelector(`#type`);
 const priceInput = form.querySelector(`#price`);
+const titleInput = form.querySelector(`#title`);
 
 const enableFields = () => {
   for (let i = 0; i < formFieldsets.length; i++) {
@@ -353,10 +357,10 @@ const fillCard = function (object) {
 const compareGuestsToRooms = () => {
   if (roomInput.value === `100` && guestInput.value !== `0`) {
     guestInput.setCustomValidity(`Этот вариант не для гостей`);
-    guestInput.style.background = `red`;
+    guestInput.style.background = `salmon`;
   } else if (roomInput.value !== `100` && guestInput.value > roomInput.value) {
     guestInput.setCustomValidity(`Количество гостей не должно превышать количество комнат`);
-    guestInput.style.background = `red`;
+    guestInput.style.background = `salmon`;
   } else {
     guestInput.setCustomValidity(``);
     guestInput.removeAttribute(`style`);
@@ -379,9 +383,26 @@ const compareTypeToPrice = () => {
   }
   if (priceInput.value < priceInput.min) {
     priceInput.setCustomValidity(`Цена за этот тип жилья не может быть меньше ${priceInput.min}руб/ночь`);
-    priceInput.style.background = `red`;
+    priceInput.style.background = `salmon`;
+  } else {
+    priceInput.setCustomValidity(``);
+    priceInput.removeAttribute(`style`);
   }
 };
+
+const checkTitleLength = (titleLength) => {
+  if (titleLength < MIN_TITLE_LENGTH) {
+    titleInput.setCustomValidity(`Ещё ${MIN_TITLE_LENGTH - titleLength} символов`);
+    titleInput.style.background = `salmon`;
+  } else if (titleLength > MAX_TITLE_LENGTH) {
+    titleInput.setCustomValidity(`Удалите лишние ${titleLength - MAX_TITLE_LENGTH} символов`);
+    titleInput.style.background = `salmon`;
+  } else {
+    titleInput.setCustomValidity(``);
+    titleInput.removeAttribute(`style`);
+  }
+  titleInput.reportValidity();
+}
 
 deactivatePage();
 
@@ -407,4 +428,13 @@ roomInput.addEventListener(`change`, () => {
 
 typeInput.addEventListener(`change`, () => {
   compareTypeToPrice();
+});
+
+priceInput.addEventListener(`change`, () => {
+  compareTypeToPrice();
+});
+
+titleInput.addEventListener(`input`, () => {
+  checkTitleLength(titleInput.value.length);
+  titleInput.reportValidity();
 })

@@ -65,6 +65,8 @@ const address = form.querySelector(`#address`);
 const pinMain = map.querySelector(`.map__pin--main`);
 const roomInput = form.querySelector(`#room_number`);
 const guestInput = form.querySelector(`#capacity`);
+const typeInput = form.querySelector(`#type`);
+const priceInput = form.querySelector(`#price`);
 
 const enableFields = () => {
   for (let i = 0; i < formFieldsets.length; i++) {
@@ -348,6 +350,39 @@ const fillCard = function (object) {
   return cardElement;
 };
 
+const compareGuestsToRooms = () => {
+  if (roomInput.value === `100` && guestInput.value !== `0`) {
+    guestInput.setCustomValidity(`Этот вариант не для гостей`);
+    guestInput.style.background = `red`;
+  } else if (roomInput.value !== `100` && guestInput.value > roomInput.value) {
+    guestInput.setCustomValidity(`Количество гостей не должно превышать количество комнат`);
+    guestInput.style.background = `red`;
+  } else {
+    guestInput.setCustomValidity(``);
+    guestInput.removeAttribute(`style`);
+  }
+};
+
+const compareTypeToPrice = () => {
+  if (typeInput.value === `palace`) {
+    priceInput.min = `10000`;
+    priceInput.placeholder = `10000`;
+  } else if (typeInput.value === `house`) {
+    priceInput.min = `5000`;
+    priceInput.placeholder = `5000`;
+  } else if (typeInput.value === `flat`) {
+    priceInput.min = `1000`;
+    priceInput.placeholder = `1000`;
+  } else {
+    priceInput.min = `0`;
+    priceInput.placeholder = `0`;
+  }
+  if (priceInput.value < priceInput.min) {
+    priceInput.setCustomValidity(`Цена за этот тип жилья не может быть меньше ${priceInput.min}руб/ночь`);
+    priceInput.style.background = `red`;
+  }
+};
+
 deactivatePage();
 
 pinMain.addEventListener(`mousedown`, (evt) => {
@@ -362,19 +397,6 @@ pinMain.addEventListener(`keydown`, (evt) => {
   }
 });
 
-const compareGuestsToRooms = () => {
-  if (roomInput.value === `100` && guestInput.value !== `0`) {
-    guestInput.setCustomValidity(`Этот вариант не для гостей`);
-    guestInput.style.background = `red`;
-  } else if (roomInput.value !== `100` && guestInput.value > roomInput.value) {
-    guestInput.setCustomValidity(`Количество гостей не должно превышать количество комнат`);
-    guestInput.style.background = `red`;
-  } else {
-    guestInput.setCustomValidity(``);
-    guestInput.removeAttribute(`style`);
-  }
-};
-
 guestInput.addEventListener(`change`, () => {
   compareGuestsToRooms();
 });
@@ -382,3 +404,7 @@ guestInput.addEventListener(`change`, () => {
 roomInput.addEventListener(`change`, () => {
   compareGuestsToRooms();
 });
+
+typeInput.addEventListener(`change`, () => {
+  compareTypeToPrice();
+})

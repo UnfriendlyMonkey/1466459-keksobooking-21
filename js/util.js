@@ -20,6 +20,22 @@
       }
       return randomArray;
     },
+
+    findData: (data) => {
+      if (!data || data.length === 0) {
+        return false;
+      }
+      return true;
+    },
+
+    addData: (data, element, property = `textContent`) => {
+      element[property] = data;
+    },
+
+    hideElement: (element) => {
+      element.classList.add(`visually-hidden`);
+    },
+
   };
 
 })();

@@ -30,7 +30,7 @@
 
   const cardsList = window.data.makeCardsList(8);
 
-  const renderPin = function (data) {
+  const renderPin = (data) => {
 
     const pinTemplate = document.querySelector(`#pin`).content.querySelector(`.map__pin`);
     let pinElement = pinTemplate.cloneNode(true);
@@ -45,7 +45,7 @@
     return pinElement;
   };
 
-  const makePinsList = function (array) {
+  const makePinsList = (array) => {
     const fragment = document.createDocumentFragment();
     for (let i = 0; i < array.length; i++) {
       fragment.appendChild(renderPin(array[i]));
@@ -53,7 +53,7 @@
     return fragment;
   };
 
-  const renderPins = function () {
+  const renderPins = () => {
     const mapPins = document.querySelector(`.map__pins`);
     mapPins.appendChild(makePinsList(cardsList));
     map.addEventListener(`click`, findCardToShow);

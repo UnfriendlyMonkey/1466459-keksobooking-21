@@ -5,6 +5,7 @@
   const MIN_TITLE_LENGTH = 30;
   const MAX_TITLE_LENGTH = 100;
 
+  const main = document.querySelector(`main`);
   const form = document.querySelector(`.ad-form`);
   const formFieldsets = form.querySelectorAll(`fieldset`);
 
@@ -108,14 +109,71 @@
     }
   };
 
+  const showSuccessPopup = () => {
+    const successTemplate = document.querySelector(`#success`).content.querySelector(`.success`);
+    const successPopup = successTemplate.cloneNode(true);
+    main.appendChild(successPopup);
+    document.addEventListener(`click`, removeSuccessPopup);
+    document.addEventListener(`keydown`, onEscHideSuccess);
+  };
+
+  const onEscHideSuccess = (evt) => {
+    if (evt.key === `Escape`) {
+      removeSuccessPopup();
+    }
+  };
+
+  const removeSuccessPopup = () => {
+    main.removeChild(main.querySelector(`.success`));
+    document.removeEventListener(`click`, removeSuccessPopup);
+    document.removeEventListener(`keydown`, onEscHideSuccess);
+  };
+
+  const showErrorPopup = () => {
+    const errorTemplate = document.querySelector(`#error`).content.querySelector(`.error`);
+    const errorPopup = errorTemplate.cloneNode(true);
+    main.appendChild(errorPopup);
+    document.addEventListener(`click`, removeErrorPopup);
+    document.addEventListener(`keydown`, onEscHideError);
+  };
+
+  const onEscHideError = (evt) => {
+    if (evt.key === `Escape`) {
+      removeErrorPopup();
+    }
+  };
+
+  const removeErrorPopup = () => {
+    main.removeChild(main.querySelector(`.error`));
+    document.removeEventListener(`click`, removeErrorPopup);
+    document.removeEventListener(`keydown`, onEscHideSuccess);
+  };
+
+  const successHandler = () => {
+    showSuccessPopup();
+    window.form.deactivateForm();
+    window.mapPins.deactivateMap();
+  };
+
+  const errorHandler = () => {
+    showErrorPopup();
+  }
+
+  const submitHandler = (evt) => {
+    window.backend.save(new FormData(form), successHandler, errorHandler);
+    evt.preventDefault();
+  };
+
   window.form = {
     activateForm: () => {
       form.classList.remove(`ad-form--disabled`);
       enableFields();
       compareGuestsToRooms();
       addFormValidation();
+      form.addEventListener(`submit`, submitHandler);
     },
     deactivateForm: () => {
+      form.removeEventListener(`submit`, submitHandler);
       form.classList.add(`ad-form--disabled`);
       disableFields();
     },

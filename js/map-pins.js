@@ -77,17 +77,26 @@
     map.addEventListener(`click`, findCardToShow);
   };
 
+  const deletePins = () => {
+    const mapPins = document.querySelector(`.map__pins`);
+    const pins = mapPins.querySelectorAll(`.map__pin`);
+    for (let i = pins.length - 1; i > 0; i--) {
+      mapPins.removeChild(pins[i]);
+    }
+    map.removeEventListener(`click`, findCardToShow);
+  }
+
   const activateMap = () => {
     map.classList.remove(`map--faded`);
     if (!map.querySelector(`.map__card`)) {
       renderPins();
     }
     setAddress();
-    // window.card.newCard(cardsList[0]);
   };
 
   const deactivateMap = () => {
     map.classList.add(`map--faded`);
+    deletePins();
     setAddress();
   };
 

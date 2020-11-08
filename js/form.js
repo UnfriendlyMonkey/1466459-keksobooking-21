@@ -158,7 +158,7 @@
 
   const errorHandler = () => {
     showErrorPopup();
-  }
+  };
 
   const submitHandler = (evt) => {
     window.backend.save(new FormData(form), successHandler, errorHandler);

@@ -84,7 +84,7 @@
       mapPins.removeChild(pins[i]);
     }
     map.removeEventListener(`click`, findCardToShow);
-  }
+  };
 
   const activateMap = () => {
     map.classList.remove(`map--faded`);

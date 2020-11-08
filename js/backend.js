@@ -33,25 +33,6 @@
     return xhr;
   };
 
-  let xhr = new XMLHttpRequest();
-  xhr.responseType = `json`;
-
-  // xhr.addEventListener(`load`, function () {
-  //     let serverData = xhr.response;
-  //     return serverData;
-  // });
-
-  xhr.open(`GET`, LOAD_URL, true);
-  xhr.send();
-
-  xhr.onreadystatechange = function() {
-    if (xhr.readyState == 4 && xhr.status == 200) {
-      console.log(xhr.response);
-      const cardsList = xhr.response;
-      // return serverData;
-    }
-  };
-
   window.backend = {
     load: (onLoad, onError) => {
       let xhr = createXhr(onLoad, onError);
@@ -65,28 +46,6 @@
       xhr.open(`POST`, SAVE_URL);
       xhr.send(data);
     },
-    getData: () => {
-      let xhr = new XMLHttpRequest();
-      xhr.responseType = `json`;
-
-      // xhr.addEventListener(`load`, function () {
-      //     let serverData = xhr.response;
-      //     return serverData;
-      // });
-
-      xhr.open(`GET`, LOAD_URL);
-      xhr.send();
-
-      xhr.onreadystatechange = function() {
-        if (xhr.readyState == 4 && xhr.status == 200) {
-          console.log(xhr.response);
-          let serverData = xhr.response;
-          return serverData;
-        }
-      };
-
-    },
-    cardsList,
   };
 
 })();

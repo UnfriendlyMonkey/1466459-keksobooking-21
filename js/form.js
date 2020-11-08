@@ -8,6 +8,7 @@
   const main = document.querySelector(`main`);
   const form = document.querySelector(`.ad-form`);
   const formFieldsets = form.querySelectorAll(`fieldset`);
+  const formReset = form.querySelector(`.ad-form__reset`);
 
   const roomInput = form.querySelector(`#room_number`);
   const guestInput = form.querySelector(`#capacity`);
@@ -164,6 +165,11 @@
     evt.preventDefault();
   };
 
+  const onFormReset = () => {
+    window.form.deactivateForm();
+    window.mapPins.deactivateMap();
+  };
+
   window.form = {
     activateForm: () => {
       form.classList.remove(`ad-form--disabled`);
@@ -171,9 +177,12 @@
       compareGuestsToRooms();
       addFormValidation();
       form.addEventListener(`submit`, submitHandler);
+      formReset.addEventListener(`click`, onFormReset);
     },
     deactivateForm: () => {
       form.removeEventListener(`submit`, submitHandler);
+      formReset.removeEventListener(`click`, onFormReset);
+      form.reset();
       form.classList.add(`ad-form--disabled`);
       disableFields();
     },

@@ -28,9 +28,27 @@
     }
   };
 
-  const cardsList = window.data.makeCardsList(8);
+  let cardsList = [];
 
-  const renderPin = function (data) {
+  const onDataLoad = (response) => {
+    cardsList = response;
+  };
+
+  const errorHandler = (errorMessage) => {
+    let node = document.createElement(`div`);
+    node.style = `z-index: 100; margin: 0 auto; text-align: center; background-color: red;`;
+    node.style.position = `absolute`;
+    node.style.left = 0;
+    node.style.right = 0;
+    node.style.fontSize = `30px`;
+
+    node.textContent = errorMessage;
+    document.body.insertAdjacentElement(`afterbegin`, node);
+  };
+
+  window.backend.load(onDataLoad, errorHandler);
+
+  const renderPin = (data) => {
 
     const pinTemplate = document.querySelector(`#pin`).content.querySelector(`.map__pin`);
     let pinElement = pinTemplate.cloneNode(true);
@@ -45,7 +63,7 @@
     return pinElement;
   };
 
-  const makePinsList = function (array) {
+  const makePinsList = (array) => {
     const fragment = document.createDocumentFragment();
     for (let i = 0; i < array.length; i++) {
       fragment.appendChild(renderPin(array[i]));
@@ -53,10 +71,19 @@
     return fragment;
   };
 
-  const renderPins = function () {
+  const renderPins = () => {
     const mapPins = document.querySelector(`.map__pins`);
     mapPins.appendChild(makePinsList(cardsList));
     map.addEventListener(`click`, findCardToShow);
+  };
+
+  const deletePins = () => {
+    const mapPins = document.querySelector(`.map__pins`);
+    const pins = mapPins.querySelectorAll(`.map__pin`);
+    for (let i = pins.length - 1; i > 0; i--) {
+      mapPins.removeChild(pins[i]);
+    }
+    map.removeEventListener(`click`, findCardToShow);
   };
 
   const activateMap = () => {
@@ -65,11 +92,11 @@
       renderPins();
     }
     setAddress();
-    window.card.newCard(cardsList[0]);
   };
 
   const deactivateMap = () => {
     map.classList.add(`map--faded`);
+    deletePins();
     setAddress();
   };
 

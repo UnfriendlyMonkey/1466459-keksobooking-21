@@ -57,7 +57,7 @@
     `http://o0.github.io/assets/images/tokyo/hotel3.jpg`
   ];
 
-  const makeRandomCard = function (count) {
+  const makeRandomCard = (count) => {
     const randomCard = {
       author: {
         avatar: `img/avatars/user0` + count + `.png`,

@@ -28,7 +28,7 @@
     }
   };
 
-  const checkData = function (data, element, property = `textContent`, text) {
+  const checkData = (data, element, property = `textContent`, text) => {
     text = typeof text !== `undefined` ? text : data;
 
     if (window.util.findData(data) === true) {
@@ -38,7 +38,7 @@
     }
   };
 
-  const checkCapacity = function (rooms, guests, element) {
+  const checkCapacity = (rooms, guests, element) => {
     let text = ``;
     if (rooms && guests) {
       text = `${rooms} комнаты для ${guests} гостей`;
@@ -50,7 +50,7 @@
     checkData(text, element);
   };
 
-  const checkTime = function (checkin, checkout, element) {
+  const checkTime = (checkin, checkout, element) => {
     let text = ``;
     if (checkin && checkout) {
       text = `Заезд после ${checkin}, выезд до ${checkout}`;
@@ -62,7 +62,7 @@
     checkData(text, element);
   };
 
-  const makePhotosList = function (data) {
+  const makePhotosList = (data) => {
     let fragment = document.createDocumentFragment();
     for (let i = 0; i < data.length; i++) {
       let newImage = document.createElement(`img`);
@@ -76,7 +76,7 @@
     return fragment;
   };
 
-  const fillCard = function (object) {
+  const fillCard = (object) => {
     const cardTemplate = document.querySelector(`#card`).content.querySelector(`.map__card`);
     let cardElement = cardTemplate.cloneNode(true);
 

@@ -8,8 +8,8 @@
   const borders = {
     minX: -33,
     maxX: 1167,
-    minY: 115,
-    maxY: 615,
+    minY: 46,
+    maxY: 546,
   };
 
   const map = document.querySelector(`.map`);
@@ -25,8 +25,12 @@
       y: evt.clientY,
     };
 
+    let dragged = false;
+
     const onMouseMove = (moveEvt) => {
       moveEvt.preventDefault();
+
+      dragged = true;
 
       let shift = {
         x: startCoords.x - moveEvt.clientX,
@@ -63,6 +67,10 @@
 
     const onMouseUp = (upEvt) => {
       upEvt.preventDefault();
+      if (!dragged) {
+        address.value = `${mainPin.offsetLeft + X_SHIFT}, ${mainPin.offsetTop + Y_SHIFT}`;
+      }
+
       document.removeEventListener(`mousemove`, onMouseMove);
       document.removeEventListener(`mouseup`, onMouseUp);
     };

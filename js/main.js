@@ -11,8 +11,8 @@
   };
 
   const deactivatePage = () => {
-    window.mapPins.deactivateMap();
     window.form.deactivateForm();
+    window.mapPins.deactivateMap();
   };
 
   deactivatePage();

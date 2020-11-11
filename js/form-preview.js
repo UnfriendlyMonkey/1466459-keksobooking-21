@@ -3,17 +3,11 @@
 (() => {
 
   const handleAvatarSelect = (evt) => {
-    const file = evt.target.files; // FileList object
+    const file = evt.target.files;
     const f = file[0];
-    // Only process image files.
-    // if (!f.type.match('image.*')) {
-    //     alert("Image only please....");
-    // }
     const reader = new FileReader();
-    // Closure to capture the file information.
     reader.onload = (function () {
       return function (e) {
-        // Render thumbnail.
         const previewContainer = document.querySelector(`.ad-form-header__preview`);
         const preview = previewContainer.querySelector(`img`);
         preview.src = e.target.result;
@@ -22,24 +16,16 @@
         previewContainer.style = `padding: 0;`;
       };
     })(f);
-    // Read in the image file as a data URL.
     reader.readAsDataURL(f);
   };
 
   const handleFileSelect = (evt) => {
     const files = evt.target.files; // FileList object
-    // Loop through the FileList and render image files as thumbnails.
     for (let i = 0; i < files.length; i++) {
-      // Only process image files.
-      // if (!f.type.match('image.*')) {
-      //     alert("Image only please....");
-      // }
       let f = files[i];
       let reader = new FileReader();
-      // Closure to capture the file information.
       reader.onload = (function () {
         return function (e) {
-          // Render thumbnail.
           let newImg = document.createElement(`img`);
           newImg.src = e.target.result;
           newImg.width = `70`;
@@ -48,7 +34,6 @@
           document.querySelector(`.ad-form__photo`).appendChild(newImg);
         };
       })(f);
-      // Read in the image file as a data URL.
       reader.readAsDataURL(f);
     }
   };

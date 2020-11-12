@@ -7,6 +7,8 @@
   const PIN_X_SHIFT = 25;
   const PIN_Y_SHIFT = 70;
 
+  const MAX_PINS_LIST = 5;
+
   const map = document.querySelector(`.map`);
 
   const findCardToShow = (evt) => {
@@ -38,7 +40,8 @@
 
   const makePinsList = (array) => {
     const fragment = document.createDocumentFragment();
-    for (let i = 0; i < array.length; i++) {
+    let count = array.length < MAX_PINS_LIST ? array.length : MAX_PINS_LIST;
+    for (let i = 0; i < count; i++) {
       fragment.appendChild(renderPin(array[i]));
     }
     return fragment;

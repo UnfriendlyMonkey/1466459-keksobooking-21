@@ -18,6 +18,8 @@
   const timeinInput = form.querySelector(`#timein`);
   const timeoutInput = form.querySelector(`#timeout`);
 
+  const images = form.querySelector(`.ad-form__photo`);
+
   const compareGuestsToRooms = () => {
     if (roomInput.value === `100` && guestInput.value !== `0`) {
       guestInput.setCustomValidity(`Этот вариант не для гостей`);
@@ -170,6 +172,17 @@
     window.mapPins.deactivateMap();
   };
 
+  const deletePreviews = () => {
+    if (images.children) {
+      let image = images.querySelectorAll(`img`);
+      for (let i = images.children.length - 1; i >= 0; i--) {
+        images.removeChild(image[i]);
+      }
+
+      // images.removeChild(image);
+    }
+  };
+
   window.form = {
     activateForm: () => {
       form.classList.remove(`ad-form--disabled`);
@@ -183,6 +196,7 @@
       form.removeEventListener(`submit`, submitHandler);
       formReset.removeEventListener(`click`, onFormReset);
       form.reset();
+      deletePreviews();
       form.classList.add(`ad-form--disabled`);
       disableFields();
     },

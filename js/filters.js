@@ -22,7 +22,7 @@
   const priceFilter = (arr) => {
     let filtered = [];
 
-    switch (priceFilter.value) {
+    switch (priceSelect.value) {
       case `any`:
         filtered = arr;
         break;
@@ -43,21 +43,6 @@
         break;
     }
 
-    // if (priceFilter.value === `any`) {
-    //   filtered = arr;
-    // } else if (priceFilter.value === `low`) {
-    //   filtered = arr.filter(function (item) {
-    //     return item.offer.price < 10000;
-    //   });
-    // } else if (priceFilter.value === `high`) {
-    //   filtered = arr.filter(function (item) {
-    //     return item.offer.price > 50000;
-    //   });
-    // } else {
-    //   filtered = arr.filter(function (item) {
-    //     return item.offer.price <= 50000 && item.offer.price >= 10000;
-    //   });
-    // }
     return filtered;
   };
 
@@ -94,18 +79,15 @@
       filtered = roomsFilter(filtered);
     }
     filtered = guestsFilter(filtered);
-    // if (priceSelect.value !== `any`) {
-    //   filtered = priceFilter(filtered);
-    // }
+    if (priceSelect.value !== `any`) {
+      filtered = priceFilter(filtered);
+    }
     return filtered;
   };
 
 
   window.filters = {
     applyFilters,
-    typeFilter,
-    roomsFilter,
-    priceFilter,
   };
 
 })();

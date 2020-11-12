@@ -8,6 +8,7 @@
   const map = document.querySelector(`.map`);
   const form = document.querySelector(`.ad-form`);
   const address = form.querySelector(`#address`);
+  const mainPin = map.querySelector(`.map__pin--main`);
 
   const findCardToShow = (evt) => {
     if (!evt.target.closest(`.map__pin`) || evt.target.closest(`.map__pin`).classList.contains(`map__pin--main`)) {
@@ -23,6 +24,7 @@
   const setAddress = () => {
     if (map.classList.contains(`map--faded`)) {
       address.value = `601, 450`;
+      mainPin.style = `left: 570px; top: 375px;`;
     } else {
       address.value = `601, 459`;
     }

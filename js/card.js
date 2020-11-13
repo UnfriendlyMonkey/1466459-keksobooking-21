@@ -20,11 +20,17 @@
 
   const map = document.querySelector(`.map`);
 
-  const onEscHideCard = (evt) => {
-    if (map.querySelector(`.map__card`) && evt.key === `Escape`) {
+  const hideCard = () => {
+    if (map.querySelector(`.map__card`)) {
       let cardToHide = map.querySelector(`.map__card`);
       document.removeEventListener(`keydown`, onEscHideCard);
       map.removeChild(cardToHide);
+    }
+  };
+
+  const onEscHideCard = (evt) => {
+    if (map.querySelector(`.map__card`) && evt.key === `Escape`) {
+      hideCard();
     }
   };
 
@@ -137,6 +143,7 @@
 
   window.card = {
     newCard,
+    hideCard,
   };
 
 })();

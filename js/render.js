@@ -87,8 +87,6 @@
 
   const onChangeFilter = () => {
     let filtered = window.filters.applyFilters(cardsList);
-    // let filtered = window.filters.priceFilter(cardsList);
-    console.log(filtered);
     renderPins(filtered);
   };
 

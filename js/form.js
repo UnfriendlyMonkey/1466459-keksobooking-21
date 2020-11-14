@@ -23,10 +23,10 @@
   const compareGuestsToRooms = () => {
     if (roomInput.value === `100` && guestInput.value !== `0`) {
       guestInput.setCustomValidity(`Этот вариант не для гостей`);
-      guestInput.style.background = `salmon`;
+      guestInput.style.border = `2px solid red`;
     } else if (roomInput.value !== `100` && guestInput.value > roomInput.value) {
       guestInput.setCustomValidity(`Количество гостей не должно превышать количество комнат`);
-      guestInput.style.background = `salmon`;
+      guestInput.style.border = `2px solid red`;
     } else {
       guestInput.setCustomValidity(``);
       guestInput.removeAttribute(`style`);
@@ -49,20 +49,21 @@
     }
     if (priceInput.value < priceInput.min) {
       priceInput.setCustomValidity(`Цена за этот тип жилья не может быть меньше ${priceInput.min}руб/ночь`);
-      priceInput.style.background = `salmon`;
+      priceInput.style.border = `2px solid red`;
     } else {
       priceInput.setCustomValidity(``);
       priceInput.removeAttribute(`style`);
     }
+    priceInput.reportValidity();
   };
 
   const checkTitleLength = (titleLength) => {
     if (titleLength < MIN_TITLE_LENGTH) {
       titleInput.setCustomValidity(`Ещё ${MIN_TITLE_LENGTH - titleLength} символов`);
-      titleInput.style.background = `salmon`;
+      titleInput.style.border = `2px solid red`;
     } else if (titleLength > MAX_TITLE_LENGTH) {
       titleInput.setCustomValidity(`Удалите лишние ${titleLength - MAX_TITLE_LENGTH} символов`);
-      titleInput.style.background = `salmon`;
+      titleInput.style.border = `2px solid red`;
     } else {
       titleInput.setCustomValidity(``);
       titleInput.removeAttribute(`style`);
@@ -87,7 +88,7 @@
       compareTypeToPrice();
     });
 
-    titleInput.addEventListener(`input`, () => {
+    titleInput.addEventListener(`change`, () => {
       checkTitleLength(titleInput.value.length);
     });
 
@@ -163,8 +164,11 @@
   };
 
   const submitHandler = (evt) => {
-    window.backend.save(new FormData(form), successHandler, errorHandler);
     evt.preventDefault();
+    checkTitleLength();
+    compareTypeToPrice();
+    compareGuestsToRooms();
+    window.backend.save(new FormData(form), successHandler, errorHandler);
   };
 
   const onFormReset = () => {
@@ -178,8 +182,6 @@
       for (let i = images.children.length - 1; i >= 0; i--) {
         images.removeChild(image[i]);
       }
-
-      // images.removeChild(image);
     }
   };
 
@@ -187,7 +189,6 @@
     activateForm: () => {
       form.classList.remove(`ad-form--disabled`);
       enableFields();
-      compareGuestsToRooms();
       addFormValidation();
       form.addEventListener(`submit`, submitHandler);
       formReset.addEventListener(`click`, onFormReset);

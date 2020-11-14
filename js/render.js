@@ -85,9 +85,12 @@
     document.body.insertAdjacentElement(`afterbegin`, node);
   };
 
+  const debouncedRender = window.debounce(renderPins);
+
   const onChangeFilter = () => {
     let filtered = window.filters.applyFilters(cardsList);
-    renderPins(filtered);
+    // renderPins(filtered);
+    debouncedRender(filtered);
   };
 
   window.backend.load(onDataLoad, errorHandler);

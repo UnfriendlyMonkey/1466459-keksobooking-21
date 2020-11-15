@@ -75,7 +75,6 @@
       priceInput.removeAttribute(`style`);
       return true;
     }
-    priceInput.reportValidity();
   };
 
   const checkTitleLength = (titleLength) => {
@@ -92,7 +91,6 @@
       titleInput.removeAttribute(`style`);
       return true;
     }
-    titleInput.reportValidity();
   };
 
   const checkValidity = checkTitleLength && compareTypeToPrice && compareGuestsToRooms;
@@ -193,7 +191,7 @@
     evt.preventDefault();
     if (checkValidity()) {
       window.backend.save(new FormData(form), successHandler, errorHandler);
-    };
+    }
   };
 
   const onFormReset = () => {

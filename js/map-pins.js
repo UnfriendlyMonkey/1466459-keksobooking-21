@@ -23,6 +23,7 @@
       window.render.renderPins();
     }
     setAddress();
+    window.filters.enableFilterForm();
   };
 
   const deactivateMap = () => {
@@ -30,6 +31,7 @@
     window.render.deletePins();
     setAddress();
     filterForm.reset();
+    window.filters.disableFilterForm();
   };
 
   window.mapPins = {

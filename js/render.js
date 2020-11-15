@@ -89,7 +89,6 @@
 
   const onChangeFilter = () => {
     let filtered = window.filters.applyFilters(cardsList);
-    // renderPins(filtered);
     debouncedRender(filtered);
   };
 

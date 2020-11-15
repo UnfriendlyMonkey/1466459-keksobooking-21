@@ -3,7 +3,7 @@
 (() => {
 
   const filterForm = document.querySelector(`.map__filters`);
-  // const selects = filterForm.querySelectorAll(`select`);
+  const elements = filterForm.elements;
   const typeSelect = filterForm.querySelector(`#housing-type`);
   const roomSelect = filterForm.querySelector(`#housing-rooms`);
   const priceSelect = filterForm.querySelector(`#housing-price`);
@@ -100,8 +100,24 @@
     return filtered;
   };
 
+  const disableFilterForm = () => {
+    filterForm.classList.add(`visually-hidden`);
+    for (let i = 0; i < elements.length; i++) {
+      elements[i].disabled = true;
+    }
+  };
+
+  const enableFilterForm = () => {
+    filterForm.classList.remove(`visually-hidden`);
+    for (let i = 0; i < elements.length; i++) {
+      elements[i].disabled = false;
+    }
+  };
+
   window.filters = {
     applyFilters,
+    disableFilterForm,
+    enableFilterForm,
   };
 
 })();

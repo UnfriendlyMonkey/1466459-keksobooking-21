@@ -4,6 +4,7 @@
 
   const MIN_TITLE_LENGTH = 30;
   const MAX_TITLE_LENGTH = 100;
+  const PRICE_MAX = 1000000;
 
   const main = document.querySelector(`main`);
   const form = document.querySelector(`.ad-form`);
@@ -22,37 +23,57 @@
 
   const compareGuestsToRooms = () => {
     if (roomInput.value === `100` && guestInput.value !== `0`) {
-      guestInput.setCustomValidity(`Этот вариант не для гостей`);
+      roomInput.setCustomValidity(`Этот вариант не для гостей`);
       guestInput.style.border = `2px solid red`;
+      roomInput.style.border = `2px solid red`;
+      return false;
     } else if (roomInput.value !== `100` && guestInput.value > roomInput.value) {
       guestInput.setCustomValidity(`Количество гостей не должно превышать количество комнат`);
       guestInput.style.border = `2px solid red`;
+      roomInput.style.border = `2px solid red`;
+      return false;
     } else {
       guestInput.setCustomValidity(``);
+      roomInput.setCustomValidity(``);
       guestInput.removeAttribute(`style`);
+      roomInput.removeAttribute(`style`);
+      return true;
     }
   };
 
   const compareTypeToPrice = () => {
-    if (typeInput.value === `palace`) {
-      priceInput.min = `10000`;
-      priceInput.placeholder = `10000`;
-    } else if (typeInput.value === `house`) {
-      priceInput.min = `5000`;
-      priceInput.placeholder = `5000`;
-    } else if (typeInput.value === `flat`) {
-      priceInput.min = `1000`;
-      priceInput.placeholder = `1000`;
-    } else {
-      priceInput.min = `0`;
-      priceInput.placeholder = `0`;
+    let priceMin;
+    switch (typeInput.value) {
+      case `palace`:
+        priceMin = 10000;
+        priceInput.placeholder = `10000`;
+        break;
+      case `house`:
+        priceMin = 5000;
+        priceInput.placeholder = `5000`;
+        break;
+      case `flat`:
+        priceMin = 1000;
+        priceInput.placeholder = `1000`;
+        break;
+      case `bungalow`:
+        priceMin = 0;
+        priceInput.placeholder = `0`;
+        break;
     }
-    if (priceInput.value < priceInput.min) {
-      priceInput.setCustomValidity(`Цена за этот тип жилья не может быть меньше ${priceInput.min}руб/ночь`);
+
+    if (priceInput.value < priceMin) {
+      priceInput.setCustomValidity(`Цена за этот тип жилья не может быть меньше ${priceMin}руб/ночь`);
       priceInput.style.border = `2px solid red`;
+      return false;
+    } else if (priceInput.value > PRICE_MAX) {
+      priceInput.setCustomValidity(`Цена не может быть больше ${PRICE_MAX}руб/ночь`);
+      priceInput.style.border = `2px solid red`;
+      return false;
     } else {
       priceInput.setCustomValidity(``);
       priceInput.removeAttribute(`style`);
+      return true;
     }
     priceInput.reportValidity();
   };
@@ -61,15 +82,20 @@
     if (titleLength < MIN_TITLE_LENGTH) {
       titleInput.setCustomValidity(`Ещё ${MIN_TITLE_LENGTH - titleLength} символов`);
       titleInput.style.border = `2px solid red`;
+      return false;
     } else if (titleLength > MAX_TITLE_LENGTH) {
       titleInput.setCustomValidity(`Удалите лишние ${titleLength - MAX_TITLE_LENGTH} символов`);
       titleInput.style.border = `2px solid red`;
+      return false;
     } else {
       titleInput.setCustomValidity(``);
       titleInput.removeAttribute(`style`);
+      return true;
     }
     titleInput.reportValidity();
   };
+
+  const checkValidity = checkTitleLength && compareTypeToPrice && compareGuestsToRooms;
 
   const addFormValidation = () => {
     guestInput.addEventListener(`change`, () => {
@@ -84,11 +110,11 @@
       compareTypeToPrice();
     });
 
-    priceInput.addEventListener(`change`, () => {
+    priceInput.addEventListener(`input`, () => {
       compareTypeToPrice();
     });
 
-    titleInput.addEventListener(`change`, () => {
+    titleInput.addEventListener(`input`, () => {
       checkTitleLength(titleInput.value.length);
     });
 
@@ -165,10 +191,9 @@
 
   const submitHandler = (evt) => {
     evt.preventDefault();
-    checkTitleLength();
-    compareTypeToPrice();
-    compareGuestsToRooms();
-    window.backend.save(new FormData(form), successHandler, errorHandler);
+    if (checkValidity()) {
+      window.backend.save(new FormData(form), successHandler, errorHandler);
+    };
   };
 
   const onFormReset = () => {
